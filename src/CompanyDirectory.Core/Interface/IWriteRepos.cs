@@ -4,7 +4,7 @@ namespace CompanyDirectory.Core.Interface;
 
 public interface IWriteRepos<T> where T : BaseEntity
 {
-    Task<T> CreateAsync(T entity, CancellationToken cancellationToken);
-    Task<T> UpdateAsync(T entity, CancellationToken cancellationToken);
-    Task<T> SoftDeleteAsync(int id, CancellationToken cancellationToken);
+    Task CreateAsync(T entity, CancellationToken cancellationToken);
+    Task UpdateAsync(T entity, CancellationToken cancellationToken);
+    Task SoftDeleteAsync(int[] ids, CancellationToken cancellationToken);
 }
