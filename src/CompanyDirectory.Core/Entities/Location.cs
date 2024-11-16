@@ -8,7 +8,7 @@ public sealed class Location(string name) : BaseEntity
 
     public IReadOnlyCollection<Department> DepartmentList = new List<Department>().AsReadOnly();
 
-    public void UpdateDepartment(string name)
+    public void UpdateLocation(string name)
     {
         Name = name;
     }
