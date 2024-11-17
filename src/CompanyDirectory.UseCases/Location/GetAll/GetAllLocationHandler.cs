@@ -17,8 +17,7 @@ internal sealed class GetAllLocationHandler(
 
         var locationsDto = locations.Select(location => new LocationDto(
             location.Id,
-            location.Name ?? string.Empty
-        ));
+            location.Name ?? string.Empty));
 
         return await Task.FromResult(Result.Success(locationsDto));
     }

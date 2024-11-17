@@ -6,7 +6,7 @@ namespace CompanyDirectory.Infra.Data.Context.EntitiesDBConfig;
 
 internal static class BaseEntityDBConfig
 {
-    public static void ConfigureBaseEntity<TEntity>(this EntityTypeBuilder<TEntity> builder) 
+    public static void ConfigureBaseEntity<TEntity>(this EntityTypeBuilder<TEntity> builder)
         where TEntity : BaseEntity
     {
         builder.HasKey(entity => entity.Id);
@@ -18,23 +18,20 @@ internal static class BaseEntityDBConfig
             .HasFilter("IsDeleted = 0");
 
         //Audit
-        builder 
+        builder
             .Property(audit => audit.CreatedBy)
             .IsRequired();
-        builder 
+        builder
             .Property(audit => audit.CreatedOn)
             .IsRequired();
-        builder 
+        builder
             .Property(audit => audit.UpdatedBy)
             .IsRequired();
-        builder 
+        builder
             .Property(audit => audit.UpdatedOn)
             .IsRequired();
-        builder 
-            .Property(audit => audit.DeletedOn)
-            .IsRequired();
-        builder 
+        builder
             .Property(audit => audit.IsDeleted)
             .IsRequired();
-    } 
+    }
 }

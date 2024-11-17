@@ -5,7 +5,7 @@ using MediatR;
 namespace CompanyDirectory.UseCases.Location.Create;
 
 internal sealed class CreateLocationHandler(
-    IUnitOfWork unitOfWork, 
+    IUnitOfWork unitOfWork,
     IReadRepos<Core.Entities.Location> locationReadRepos) : IRequestHandler<CreateLocationRequest, Result>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
@@ -14,13 +14,11 @@ internal sealed class CreateLocationHandler(
     public async Task<Result> Handle(CreateLocationRequest request, CancellationToken cancellationToken)
     {
         var existLocation = _locationReadRepos
-            .Find(location => location.Name!.Trim().Equals(request.Name.Trim(), StringComparison.OrdinalIgnoreCase))
+            .Find(location => location.Name == request.Name)
             .SingleOrDefault();
 
-        if(existLocation is not null)
-        {
-            return Result.Conflict($"A location with the name '{request.Name}' already exists.");
-        }
+        if (existLocation is not null && existLocation.Name!.Trim().Equals(request.Name.Trim(), StringComparison.OrdinalIgnoreCase))
+            return Result.Conflict($"The location with the name '{request.Name}' already exists.");
 
         var newLocation = new Core.Entities.Location(request.Name);
 

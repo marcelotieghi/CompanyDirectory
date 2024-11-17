@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyDirectory.Infra.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241114125545_Migration_V1")]
-    partial class Migration_V1
+    [Migration("20241117174840_MigrationV1")]
+    partial class MigrationV1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,15 +49,20 @@ namespace CompanyDirectory.Infra.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<int>("UpdatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedOn")
+                    b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted")
+                        .HasFilter("IsDeleted = 0");
 
                     b.HasIndex("LocationId");
 
@@ -85,15 +90,20 @@ namespace CompanyDirectory.Infra.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<int>("UpdatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedOn")
+                    b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted")
+                        .HasFilter("IsDeleted = 0");
 
                     b.ToTable("Locations");
                 });
@@ -119,29 +129,40 @@ namespace CompanyDirectory.Infra.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("JobTitle")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<int>("UpdatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedOn")
+                    b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
+
+                    b.HasIndex("IsDeleted")
+                        .HasFilter("IsDeleted = 0");
 
                     b.ToTable("Personnel");
                 });
@@ -149,7 +170,7 @@ namespace CompanyDirectory.Infra.Data.Migrations
             modelBuilder.Entity("CompanyDirectory.Core.Entities.Department", b =>
                 {
                     b.HasOne("CompanyDirectory.Core.Entities.Location", "Location")
-                        .WithMany()
+                        .WithMany("DepartmentList")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -160,12 +181,22 @@ namespace CompanyDirectory.Infra.Data.Migrations
             modelBuilder.Entity("CompanyDirectory.Core.Entities.Personnel", b =>
                 {
                     b.HasOne("CompanyDirectory.Core.Entities.Department", "Department")
-                        .WithMany()
+                        .WithMany("PersonnelList")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("CompanyDirectory.Core.Entities.Department", b =>
+                {
+                    b.Navigation("PersonnelList");
+                });
+
+            modelBuilder.Entity("CompanyDirectory.Core.Entities.Location", b =>
+                {
+                    b.Navigation("DepartmentList");
                 });
 #pragma warning restore 612, 618
         }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CompanyDirectory.Infra.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Migration_V1 : Migration
+    public partial class MigrationV1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,11 +17,11 @@ namespace CompanyDirectory.Infra.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedBy = table.Column<int>(type: "int", nullable: false),
-                    UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -36,12 +36,12 @@ namespace CompanyDirectory.Infra.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     LocationId = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedBy = table.Column<int>(type: "int", nullable: false),
-                    UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -62,15 +62,15 @@ namespace CompanyDirectory.Infra.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    JobTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    JobTitle = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedBy = table.Column<int>(type: "int", nullable: false),
-                    UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -86,14 +86,32 @@ namespace CompanyDirectory.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Departments_IsDeleted",
+                table: "Departments",
+                column: "IsDeleted",
+                filter: "IsDeleted = 0");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Departments_LocationId",
                 table: "Departments",
                 column: "LocationId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Locations_IsDeleted",
+                table: "Locations",
+                column: "IsDeleted",
+                filter: "IsDeleted = 0");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Personnel_DepartmentId",
                 table: "Personnel",
                 column: "DepartmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Personnel_IsDeleted",
+                table: "Personnel",
+                column: "IsDeleted",
+                filter: "IsDeleted = 0");
         }
 
         /// <inheritdoc />
