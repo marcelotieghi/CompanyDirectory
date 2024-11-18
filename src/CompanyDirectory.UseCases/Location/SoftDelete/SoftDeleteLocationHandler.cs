@@ -13,11 +13,7 @@ internal sealed class SoftDeleteLocationHandler(
 
     public async Task<Result> Handle(SoftDeleteLocationRequest request, CancellationToken cancellationToken)
     {
-        bool existLocation = _locatinoReadRepos
-            .Find(location => request.Ids.Contains(location.Id))
-            .Any();
-
-        if(!existLocation)
+        if(!await _locatinoReadRepos.ExistsAsync(location => request.Ids.Contains(location.Id), cancellationToken))
             return Result.Conflict($"No location found!");
 
         await _unitOfWork.LocationWriteRepos.SoftDeleteAsync(request.Ids, cancellationToken);

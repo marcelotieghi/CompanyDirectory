@@ -1,55 +1,55 @@
 using Carter;
-using CompanyDirectory.UseCases.Location.Create;
-using CompanyDirectory.UseCases.Location.GetAll;
-using CompanyDirectory.UseCases.Location.GetById;
-using CompanyDirectory.UseCases.Location.SoftDelete;
-using CompanyDirectory.UseCases.Location.Update;
+using CompanyDirectory.UseCases.Department.Create;
+using CompanyDirectory.UseCases.Department.GetAll;
+using CompanyDirectory.UseCases.Department.GetById;
+using CompanyDirectory.UseCases.Department.SoftDelete;
+using CompanyDirectory.UseCases.Department.Update;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CompanyDirectory.API.Endpoints;
 
-public sealed class LocationEndpoint : ICarterModule
+public sealed class DepartmentEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/locations", GetAllLocations)
-            .WithName("GetAllLocations")
+        app.MapGet("/departments", GetAllDepartment)
+            .WithName("GetAllDepartment")
             .Produces(200)
             .Produces(400)
             .WithOpenApi();
 
-        app.MapGet("/locations/{id:int}", GetLocationById)
-            .WithName("GetLocationById")
+        app.MapGet("/departments/{id:int}", GetByIdDepartment)
+            .WithName("GetByIdDepartment")
             .Produces(200)
             .Produces(404)
             .WithOpenApi();
 
-        app.MapPost("/locations", CreateLocation)
-           .WithName("CreateLocation")
+        app.MapPost("/departments", CreateDepartment)
+           .WithName("CreateDepartment")
            .Produces(201)
            .Produces(400)
            .WithOpenApi();
 
-        app.MapPut("/locations/{id:int}", UpdateLocation)
-           .WithName("UpdateLocation")
+        app.MapPut("/departments/{id:int}", UpdateDepartment)
+           .WithName("UpdateDepartment")
            .Produces(200)
            .Produces(400)
            .WithOpenApi();
 
-        app.MapPut("/locations/delete", SoftDeleteLocation)
-           .WithName("SoftDeleteLocation")
+        app.MapPut("/departments/delete", SoftDeleteDepartment)
+           .WithName("SoftDeleteDepartment")
            .Produces(200)
            .Produces(400)
            .WithOpenApi();
     }
 
-    private static async Task<IResult> GetAllLocations(
+    private static async Task<IResult> GetAllDepartment(
         ISender sender)
     {
         try
         {
-            var result = await sender.Send(new GetAllLocationRequest());
+            var result = await sender.Send(new GetAllDepartmentRequest());
             return result.IsSuccess
                 ? TypedResults.Ok(result.Value)
                 : TypedResults.BadRequest(result.Errors);
@@ -60,17 +60,16 @@ public sealed class LocationEndpoint : ICarterModule
         }
     }
 
-    private static async Task<IResult> GetLocationById(
+    private static async Task<IResult> GetByIdDepartment(
         ISender sender,
         int id)
     {
         try
         {
-            var result = await sender.Send(new GetByIdLocationRequest(id));
+            var result = await sender.Send(new GetByIdDepartmentRequest(id));
             return result.IsSuccess
-                ? TypedResults.Ok(result.Value) 
-                : TypedResults.NotFound(result.Errors);
-
+                ? TypedResults.Ok(result.Value)
+                : TypedResults.BadRequest(result.Errors);
         }
         catch (Exception ex)
         {
@@ -78,16 +77,16 @@ public sealed class LocationEndpoint : ICarterModule
         }
     }
 
-    private static async Task<IResult> CreateLocation(
-         ISender sender,
-        [FromBody] CreateLocationRequest request)
+    private static async Task<IResult> CreateDepartment(
+        ISender sender,
+        [FromBody] CreateDepartmentRequest request)
     {
         try
         {
             var result = await sender.Send(request);
             return result.IsSuccess
-                ? TypedResults.Ok(result.Value) 
-                : TypedResults.BadRequest(result.Errors); 
+                ? TypedResults.Ok(result.Value)
+                : TypedResults.BadRequest(result.Errors);
         }
         catch (Exception ex)
         {
@@ -95,10 +94,10 @@ public sealed class LocationEndpoint : ICarterModule
         }
     }
 
-    private static async Task<IResult> UpdateLocation(
+    private static async Task<IResult> UpdateDepartment(
         ISender sender,
         int id,
-        [FromBody] UpdateLocationRequest request)
+        [FromBody] UpdateDepartmentRequest request)
     {
         try
         {
@@ -106,21 +105,20 @@ public sealed class LocationEndpoint : ICarterModule
                 return TypedResults.BadRequest("DO TO");
 
             var result = await sender.Send(request);
-            return result.IsSuccess 
+            return result.IsSuccess
                 ? TypedResults.Ok(result.Value)
                 : TypedResults.BadRequest(result.Errors);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             return TypedResults.Problem($"An error occurred: {ex.Message}");
         }
     }
 
-    private static async Task<IResult> SoftDeleteLocation(
+    private static async Task<IResult> SoftDeleteDepartment(
         ISender sender,
-        [FromBody] SoftDeleteLocationRequest request)
+        [FromBody] SoftDeleteDepartmentRequest request)
     {
-        
         try
         {
             var result = await sender.Send(request);

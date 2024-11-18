@@ -11,13 +11,13 @@ internal sealed class GetAllLocationHandler(
 
     public async Task<Result<IEnumerable<LocationDto>>> Handle(GetAllLocationRequest request, CancellationToken cancellationToken)
     {
-        var locations = _locationReadRepos
-            .GetList()
-            .ToList();
+        var locations = _locationReadRepos.GetList();
 
-        var locationsDto = locations.Select(location => new LocationDto(
-            location.Id,
-            location.Name ?? string.Empty));
+        var locationsDto = locations
+            .Select(location => new LocationDto(
+                location.Id,
+                location.Name ?? string.Empty))
+            .AsEnumerable();
 
         return await Task.FromResult(Result.Success(locationsDto));
     }

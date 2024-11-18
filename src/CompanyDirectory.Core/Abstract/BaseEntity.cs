@@ -10,5 +10,4 @@ public abstract class BaseEntity
     public int UpdatedBy { get; set; } = 0;
     public DateTime? UpdatedOn { get; set; } = DateTime.Now;
     public bool IsDeleted { get; set; } = false;
-    public DateTime? DeletedOn { get; set; }
 }

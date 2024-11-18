@@ -13,9 +13,8 @@ internal sealed class UpdateLocationHandler(
 
     public async Task<Result> Handle(UpdateLocationRequest request, CancellationToken cancellationToken)
     {
-        var existLocation = _locationReadRepos
-            .Find(location => location.Id == request.Id)
-            .SingleOrDefault();
+        var existLocation = await _locationReadRepos
+            .GetByKeyAsync(location => location.Id == request.Id, cancellationToken);
 
         if (existLocation is null)
             return Result.NotFound($"No location found with the ID '{request.Id}'.");

@@ -13,13 +13,9 @@ internal sealed class CreateLocationHandler(
 
     public async Task<Result> Handle(CreateLocationRequest request, CancellationToken cancellationToken)
     {
-        var existLocation = _locationReadRepos
-            .Find(location => location.Name == request.Name)
-            .SingleOrDefault();
-
-        if (existLocation is not null && existLocation.Name!.Trim().Equals(request.Name.Trim(), StringComparison.OrdinalIgnoreCase))
-            return Result.Conflict($"The location with the name '{request.Name}' already exists.");
-
+        if(await _locationReadRepos.ExistsAsync(l => l.Name!.Trim() == request.Name.Trim(), cancellationToken))
+            return  Result.Conflict($"The location with the name '{request.Name}' already exists.");
+        
         var newLocation = new Core.Entities.Location(request.Name);
 
         await _unitOfWork.LocationWriteRepos.CreateAsync(newLocation, cancellationToken);

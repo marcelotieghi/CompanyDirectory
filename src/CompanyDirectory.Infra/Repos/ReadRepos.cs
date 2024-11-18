@@ -17,9 +17,14 @@ public sealed class ReadRepos<T> : IReadRepos<T> where T : BaseEntity
         _dbSet = _appDbContext.Set<T>();
     }
 
-    public IQueryable<T> Find(Expression<Func<T, bool>> expression)
+    public async Task<T> GetByKeyAsync(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default)
     {
-        return _dbSet.Where(expression).AsQueryable();
+        return await _dbSet.FirstOrDefaultAsync(condition, cancellationToken) ?? throw new NullReferenceException();
+    }
+
+    public Task<bool> ExistsAsync(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default)
+    {
+        return _dbSet.AnyAsync(condition, cancellationToken);
     }
 
     public IQueryable<T> GetList()

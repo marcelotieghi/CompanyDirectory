@@ -29,7 +29,6 @@ public sealed class WriteRepos<T> : IWriteRepos<T> where T : BaseEntity
         await _dbSet
             .Where(entity => ids.Contains(entity.Id))
             .ExecuteUpdateAsync(setter => setter
-                .SetProperty(entity => entity.IsDeleted, true)
-                .SetProperty(entity => entity.DeletedOn, DateTime.Now), cancellationToken);
+                .SetProperty(entity => entity.IsDeleted, true), cancellationToken);
     }
 }

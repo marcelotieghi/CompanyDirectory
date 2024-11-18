@@ -5,6 +5,7 @@ namespace CompanyDirectory.Core.Interface;
 
 public interface IReadRepos<T> where T : BaseEntity
 {
+    Task<T> GetByKeyAsync(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default);
     IQueryable<T> GetList();
-    IQueryable<T> Find(Expression<Func<T, bool>> expression);
+    Task<bool> ExistsAsync(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default);
 }
