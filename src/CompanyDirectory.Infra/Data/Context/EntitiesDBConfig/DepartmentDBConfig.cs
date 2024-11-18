@@ -20,9 +20,13 @@ internal sealed class DepartmentDBConfig : IEntityTypeConfiguration<Department>
             .IsRequired();
 
         builder
-            .HasMany(department => department.PersonnelList)
+            .HasMany<Personnel>()
             .WithOne(personnel => personnel.Department)
             .HasForeignKey(personnel => personnel.DepartmentId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder 
+            .Navigation(department => department.Location)
+            .AutoInclude();
     }
 }

@@ -4,6 +4,7 @@ using CompanyDirectory.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyDirectory.Infra.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241118184121_MigrationV3")]
+    partial class MigrationV3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,7 +161,7 @@ namespace CompanyDirectory.Infra.Data.Migrations
             modelBuilder.Entity("CompanyDirectory.Core.Entities.Department", b =>
                 {
                     b.HasOne("CompanyDirectory.Core.Entities.Location", "Location")
-                        .WithMany()
+                        .WithMany("DepartmentList")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -169,12 +172,22 @@ namespace CompanyDirectory.Infra.Data.Migrations
             modelBuilder.Entity("CompanyDirectory.Core.Entities.Personnel", b =>
                 {
                     b.HasOne("CompanyDirectory.Core.Entities.Department", "Department")
-                        .WithMany()
+                        .WithMany("PersonnelList")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("CompanyDirectory.Core.Entities.Department", b =>
+                {
+                    b.Navigation("PersonnelList");
+                });
+
+            modelBuilder.Entity("CompanyDirectory.Core.Entities.Location", b =>
+                {
+                    b.Navigation("DepartmentList");
                 });
 #pragma warning restore 612, 618
         }

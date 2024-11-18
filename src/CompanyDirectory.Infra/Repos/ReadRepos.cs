@@ -19,7 +19,7 @@ public sealed class ReadRepos<T> : IReadRepos<T> where T : BaseEntity
 
     public async Task<T> GetByKeyAsync(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.FirstOrDefaultAsync(condition, cancellationToken) ?? throw new NullReferenceException();
+        return await _dbSet.FirstOrDefaultAsync(condition, cancellationToken) ?? null!;
     }
 
     public Task<bool> ExistsAsync(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default)

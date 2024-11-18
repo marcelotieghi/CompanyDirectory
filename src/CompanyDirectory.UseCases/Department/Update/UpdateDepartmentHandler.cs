@@ -15,7 +15,7 @@ internal sealed class UpdateDepartmentHandler(
 
     public async Task<Result> Handle(UpdateDepartmentRequest request, CancellationToken cancellationToken)
     {
-        if(await _locationReadRepos.ExistsAsync(l => l.Id == request.LocationId, cancellationToken))
+        if(!await _locationReadRepos.ExistsAsync(l => l.Id == request.LocationId, cancellationToken))
             return Result.NotFound($"No location found with the ID '{request.Id}'.");
 
         var department = await _departmentReadRepos.GetByKeyAsync(d => d.Id == request.Id, cancellationToken);
@@ -25,6 +25,8 @@ internal sealed class UpdateDepartmentHandler(
 
         if(department.Name!.ToLower().Trim() == request.Name.ToLower().Trim())
             return  Result.Conflict($"The department with the name '{request.Name}' already exists.");
+
+        department.UpdateDepartment(request.Name, request.LocationId);
 
         await _unitOfWork.DepartmentWriteRepos.UpdateAsync(department, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);

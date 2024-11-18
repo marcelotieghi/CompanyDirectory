@@ -30,5 +30,8 @@ internal sealed class PersonnelDBConfig : IEntityTypeConfiguration<Personnel>
             .Property(personnel => personnel.DepartmentId)
             .IsRequired();
 
+        builder
+            .Navigation(personnel => personnel.Department)
+            .AutoInclude();
     }
 }

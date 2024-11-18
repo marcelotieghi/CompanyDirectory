@@ -16,7 +16,7 @@ internal sealed class LocationDBConfig : IEntityTypeConfiguration<Location>
             .IsRequired();
 
         builder
-            .HasMany(location => location.DepartmentList)
+            .HasMany<Department>()
             .WithOne(department => department.Location)
             .HasForeignKey(department => department.LocationId)
             .OnDelete(DeleteBehavior.Cascade);

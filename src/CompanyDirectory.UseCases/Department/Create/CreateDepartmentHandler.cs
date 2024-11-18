@@ -15,12 +15,16 @@ internal sealed class CreateDepartmentHandler(
 
     public async Task<Result> Handle(CreateDepartmentRequest request, CancellationToken cancellationToken)
     {
-        if(await _locationReadRepos.ExistsAsync(l => l.Id == request.LocationId, cancellationToken))
+        if(!await _locationReadRepos.ExistsAsync(l => l.Id == request.LocationId, cancellationToken))
+        {
             return Result.NotFound($"No location found with the ID '{request.LocationId}'.");
-
+        }
+            
         if(await _departmentReadRepos.ExistsAsync(d => d.Name!.ToLower().Trim() == request.Name.ToLower().Trim(), cancellationToken))
+        {
             return  Result.Conflict($"The department with the name '{request.Name}' already exists.");
-
+        }
+            
         var newDepartment = new Core.Entities.Department(request.Name, request.LocationId);
 
         await _unitOfWork.DepartmentWriteRepos.CreateAsync(newDepartment, cancellationToken);

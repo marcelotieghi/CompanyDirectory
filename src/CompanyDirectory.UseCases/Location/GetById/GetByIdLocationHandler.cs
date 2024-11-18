@@ -11,15 +11,17 @@ internal sealed class GetByIdLocationHandler(
 
     public async Task<Result<LocationDto>> Handle(GetByIdLocationRequest request, CancellationToken cancellationToken)
     {
-        var existLocation = await _locationReadRepos
-            .GetByKeyAsync(location => location.Id == request.Id, cancellationToken);
+        var location = await _locationReadRepos
+            .GetByKeyAsync(l => l.Id == request.Id, cancellationToken);
 
-        if(existLocation is null)
+        if(location is null)
+        {
             return await Task.FromResult(Result.NotFound($"No location found with the ID '{request.Id}'."));
+        }
 
         var locationDto = new LocationDto(
-            existLocation.Id, 
-            existLocation.Name ?? string.Empty);
+            location.Id, 
+            location.Name ?? string.Empty);
 
         return await Task.FromResult(Result.Success(locationDto));
     }
